@@ -12,20 +12,21 @@ import { Subscription } from 'rxjs';
 export class ProductsPage implements OnInit, OnDestroy {
 
   products: Product[];
-  subs: Subscription;
 
   constructor(private productService: ProductsService) { }
 
   ngOnInit() {
-    this.subs = this.productService.products.subscribe(products => {
+    this.productService.fetchedProducts().subscribe(products => {
       this.products = products;
     });
-    this.productService.fetchedProducts().subscribe();
+  }
+
+  deleteProduct(id: number) {
+    this.productService.deleteProduct(id).subscribe(res => {
+      this.products = this.products.filter(product => product.id !== res.id);
+    });
   }
 
   ngOnDestroy() {
-    if (this.subs) {
-      this.subs.unsubscribe();
-    }
   }
 }
