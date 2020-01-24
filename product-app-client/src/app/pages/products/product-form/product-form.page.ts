@@ -9,6 +9,8 @@ import { ProductsService } from '../products.service';
   templateUrl: './product-form.page.html',
   styleUrls: ['./product-form.page.scss']
 })
+
+// tslint:disable-next-line: component-class-suffix
 export class ProductFormPage implements OnInit {
 
   form: FormGroup;
@@ -33,14 +35,14 @@ export class ProductFormPage implements OnInit {
       } else {
         this.initForm();
       }
-    })
+    });
   }
 
   initForm() {
     this.form = new FormGroup({
       barcode: new FormControl(this.product ? this.product.barcode : null, {
         updateOn: 'change',
-        validators: [Validators.required]
+        validators: [Validators.required, Validators.pattern('^(0|[1-9][0-9]*)$'), Validators.minLength(13)]
       }),
       description: new FormControl(this.product ? this.product.description : null, {
         updateOn: 'change',
@@ -48,8 +50,8 @@ export class ProductFormPage implements OnInit {
       }),
       price: new FormControl(this.product ? this.product.price : null, {
         updateOn: 'change',
-        validators: [Validators.required]
-      })
+        validators: [Validators.required, Validators.pattern('^-?[0-9]\\d*(\\.\\d{1,2})?$')]
+      }),
     });
   }
 
@@ -67,4 +69,4 @@ export class ProductFormPage implements OnInit {
       this.router.navigate(['/products']);
     });
   }
-} 
+}

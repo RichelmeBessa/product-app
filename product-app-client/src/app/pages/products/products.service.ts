@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, ObservedValueOf } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+
 import { Product } from './products.model';
 
 @Injectable({
@@ -13,7 +13,7 @@ export class ProductsService {
 
   constructor(private http: HttpClient) { }
 
-  fetchedProducts(): Observable<Product[]> {
+  fetchedProducts(): Observable<any> {
     return this.http.get<Product[]>(this.baseUrl);
   }
 

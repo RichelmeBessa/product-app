@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProductsService } from './products.service';
 import { Product } from './products.model';
-import { Subscription } from 'rxjs';
+import {  Subject } from 'rxjs';
 
 @Component({
   selector: 'app-products',
@@ -9,8 +9,10 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./products.page.scss']
 })
 
+// tslint:disable-next-line: component-class-suffix
 export class ProductsPage implements OnInit, OnDestroy {
 
+  dtTrigger = new Subject();
   products: Product[];
 
   constructor(private productService: ProductsService) { }
@@ -18,15 +20,17 @@ export class ProductsPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.productService.fetchedProducts().subscribe(products => {
       this.products = products;
+      this.dtTrigger.next();
     });
   }
 
   deleteProduct(id: number) {
-    this.productService.deleteProduct(id).subscribe(res => {
-      this.products = this.products.filter(product => product.id !== res.id);
+    this.productService.deleteProduct(id).subscribe(response => {
+      this.products = this.products.filter(product => product.id !== response.id);
     });
   }
 
   ngOnDestroy() {
+    this.dtTrigger.unsubscribe();
   }
 }
